@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: monospace;
+}
+
+/* Canvas element positioned absolutely to cover the entire screen */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
