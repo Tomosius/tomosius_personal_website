@@ -13,6 +13,7 @@ function initCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
+
 initCanvas(); // Initialize canvas size on load
 
 /**
@@ -28,6 +29,11 @@ const topRainConfig = {
     baseFallSpeed: 0.2, // Base speed for the falling words
     baseFadingStrength: 0.05, // Base strength for the fading effect (trail length)
     baseFadingSpeed: 0.05, // Base speed at which the words fade
+    variations: {
+        fallSpeedVariation: 0.2, // Variability in fall speed (+/- 20%)
+        fadingStrengthVariation: 0.3, // Variability in fading strength (+/- 30%)
+        fadingSpeedVariation: 0.2, // Variability in fading speed (+/- 20%)
+    },
     drops: [] // Array to store the properties of each column of falling words
 };
 
@@ -38,8 +44,31 @@ const bottomRainConfig = {
     baseFallSpeed: 0.2, // Base speed for the rising words (same as falling speed)
     baseFadingStrength: 0.05, // Base strength for the fading effect (trail length)
     baseFadingSpeed: 0.05, // Base speed at which the words fade
+    variations: {
+        fallSpeedVariation: 0.2, // Variability in rise speed (+/- 20%)
+        fadingStrengthVariation: 0.3, // Variability in fading strength (+/- 30%)
+        fadingSpeedVariation: 0.2, // Variability in fading speed (+/- 20%)
+    },
     drops: [] // Array to store the properties of each column of rising words
 };
+
+/**
+ * Function to apply variations to a base value.
+ * @param {number} baseValue - The base value to which the variation will be applied.
+ * @param {number} variation - The variation percentage to apply.
+ * @returns {number} The new value after applying the variation.
+ */
+function applyVariation(baseValue, variation) {
+    const variationFactor = 1 + (Math.random() * (variation * 2) - variation); // Calculate a random variation factor
+    return baseValue * variationFactor; // Apply the variation to the base value
+}
+
+/**
+ * Function to initialize the drops for the rain effect.
+ * Each drop represents a column of text that will fall or rise.
+ * @param {Object} config - The configuration object for the rain effect.
+ * @param {boolean} isTop - A boolean indicating if the drops are for the top or bottom rain.
+ */
 
 /**
  * Function to initialize the drops for the rain effect.
@@ -52,9 +81,9 @@ function initDrops(config) {
         config.drops[x] = {
             yPos: Math.random() * (canvas.height / 2) / config.fontSize, // Random initial vertical position within the upper or lower half of the screen
             word: config.words[Math.floor(Math.random() * config.words.length)], // Randomly select a word from the config
-            fallSpeed: config.baseFallSpeed, // Use the base fall speed
-            fadingStrength: config.baseFadingStrength, // Use the base fading strength
-            fadingSpeed: config.baseFadingSpeed // Use the base fading speed
+            fallSpeed: applyVariation(config.baseFallSpeed, config.variations.fallSpeedVariation), // Apply fall speed variation
+            fadingStrength: applyVariation(config.baseFadingStrength, config.variations.fadingStrengthVariation), // Apply fading strength variation
+            fadingSpeed: applyVariation(config.baseFadingSpeed, config.variations.fadingSpeedVariation) // Apply fading speed variation
         };
     }
 }
