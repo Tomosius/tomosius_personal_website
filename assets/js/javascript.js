@@ -45,9 +45,8 @@ const bottomRainConfig = {
  * Function to initialize the drops for the rain effect.
  * Each drop represents a column of text that will fall or rise.
  * @param {Object} config - The configuration object for the rain effect.
- * @param {boolean} isTop - A boolean indicating if the drops are for the top or bottom rain.
  */
-function initDrops(config, isTop) {
+function initDrops(config) {
     const columns = canvas.width / config.fontSize; // Calculate the number of columns based on canvas width and font size
     for (let x = 0; x < columns; x++) {
         config.drops[x] = {
@@ -61,15 +60,14 @@ function initDrops(config, isTop) {
 }
 
 // Initialize the drops for both top and bottom rain effects
-initDrops(topRainConfig, true);
-initDrops(bottomRainConfig, false);
+initDrops(topRainConfig);
+initDrops(bottomRainConfig);
 
 /**
  * Function to draw the rain effect on the canvas.
  * @param {Object} config - The configuration object for the rain effect.
- * @param {boolean} isTop - A boolean indicating if the drops are for the top or bottom rain.
  */
-function drawRain(config, isTop) {
+function drawRain(config) {
     const columns = canvas.width / config.fontSize; // Calculate the number of columns based on canvas width and font size
 
     // Clear the canvas with a fading effect based on the minimum fading strength among all drops
@@ -83,7 +81,7 @@ function drawRain(config, isTop) {
         const drop = config.drops[i];
 
         // Determine the vertical position based on whether it's top or bottom rain
-        const yPos = isTop ? drop.yPos * config.fontSize : canvas.height - drop.yPos * config.fontSize;
+        const yPos = config === topRainConfig ? drop.yPos * config.fontSize : canvas.height - drop.yPos * config.fontSize;
         ctx.fillText(drop.word, i * config.fontSize, yPos); // Draw the word at the calculated position
 
         // Increment the drop position based on the fall speed
@@ -106,8 +104,8 @@ function drawRain(config, isTop) {
  * This function is repeatedly called to create the animation.
  */
 function draw() {
-    drawRain(topRainConfig, true); // Draw the top rain effect
-    drawRain(bottomRainConfig, false); // Draw the bottom rain effect
+    drawRain(topRainConfig); // Draw the top rain effect
+    drawRain(bottomRainConfig); // Draw the bottom rain effect
 }
 
 // Set an interval to repeatedly call the draw function, creating the animation
@@ -116,6 +114,6 @@ setInterval(draw, 33); // 33ms interval gives roughly 30 frames per second
 // Add an event listener to handle window resizing
 window.addEventListener('resize', () => {
     initCanvas(); // Reinitialize canvas dimensions
-    initDrops(topRainConfig, true); // Reinitialize top drops
-    initDrops(bottomRainConfig, false); // Reinitialize bottom drops
+    initDrops(topRainConfig); // Reinitialize top drops
+    initDrops(bottomRainConfig); // Reinitialize bottom drops
 });
